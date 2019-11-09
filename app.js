@@ -86,6 +86,16 @@ db.connect(config.mongouri, config.mogoname, (err) => {
 					})});
 				});
 			}
+			else if(splitMsg[0] == "answer") {
+				if(splitMsg[1] == "yes") {
+					bot.sendMessage(msg.message.chat.id, "Вы добавлены в очередь!");
+					bot.sendMessage(current_connects[msg.message.chat.id], "Клиент согласился и был записан на прием!");
+				}
+				else {
+					bot.sendMessage(msg.message.chat.id, "Запрос отклонен");
+					bot.sendMessage(current_connects[msg.message.chat.id], "Запрос отклонен");
+				}
+			}
 			else {
 				if((current_queue[msg.data] == undefined || current_queue[msg.data].length == 0) && !current_connects[msg.data]) {
 					current_connects[msg.data] = msg.message.chat.id;
