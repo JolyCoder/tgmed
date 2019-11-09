@@ -42,7 +42,7 @@ db.connect(config.mongouri, config.mogoname, (err) => {
 					var buttons = []
 					var message = "";
 					for(var part of Object.keys(result.parts)) {
-						buttons.push([{"text": part, "callback_data": "part " + part.num + " " + part.name}])
+						buttons.push([{"text": part, "callback_data": "part " + splitMsg[1] + " " + part}])
 					}
 					bot.sendMessage(msg.message.chat.id, "Выберите отдел", {reply_markup: JSON.stringify({
 						inline_keyboard: buttons
@@ -54,8 +54,8 @@ db.connect(config.mongouri, config.mogoname, (err) => {
 					if(result == "not find")
 						return console.log(result);
 					var buttons = [];
-					for(var chel of result[splitMsg[2]]) {
-						buttons.push([{"text": chel, "callback_data": msg.data + " " + chel}])
+					for(var chel of result.parts[splitMsg[2]]) {
+						buttons.push([{"text": chel, "callback_data": "chel " + splitMsg[1] + " " + splitMsg[2] + " " + chel}])
 					}
 						
 					bot.sendMessage(msg.message.chat.id, "Выберите врача", {reply_markup: JSON.stringify({
