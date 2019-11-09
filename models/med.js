@@ -11,3 +11,14 @@ exports.getMed_model = (cb) => {
 		cb(err, result);
 	});
 };
+
+exports.getMedbyNumber_model = (num, cb) => {
+	db.get().collection("meds").find().toArray((err, result) => {
+		for(var clinic of docs) {
+			if(clinic.num == num) {
+				return cb(err, result);
+			}
+		}
+		cb(err, result);
+	});
+};

@@ -39,11 +39,19 @@ db.connect(config.mongouri, config.mogoname, (err) => {
 					}
 					else {
 						for(var clinic of docs) {
-							message += clinic.name + " " + clinic.location + "\n";
+							message += clinic.num + " " clinic.name + " " + clinic.location + "\n";
 						}
 					}
 					bot.sendMessage(msg.chat.id, message);
 				});
+			}
+			else {
+				medsModel.getMedbyNumber_model(msg.text, (err, result) => {
+					var message = "";
+					for(var part of Object.keys(result.parts)) {
+						message += part + "\n";
+					}
+				})
 			}
 		})
 	}
