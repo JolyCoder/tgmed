@@ -3,7 +3,8 @@ const express = require("express"),
 	  cookie_parser = require("cookie-parser"),
 	  TelegramBot = require('node-telegram-bot-api'),
 	  config = require('./parts/config'),
-	  medsController = require("./controllers/meds");
+	  medsController = require("./controllers/meds"),
+	  medsModel = require("./models/med");
 
 var app = express();
 
@@ -13,17 +14,38 @@ app.use(express.urlencoded({
 }));
 app.use(cookie_parser());
 
+const TelegramBot = require('node-telegram-bot-api');
+const bot = new TelegramBot("963374939:AAECJC50Qi4iaROG8j48JKBQ48L5Udt9-m8", {
+	polling: true
+});
 
+var current_connects = []
 
 db.connect(config.mongouri, config.mogoname, (err) => {
 	if(err) {
 		return console.log(err);
 	}
 	else {
-		// Request Controllers
-
 		app.listen(process.env.PORT || 8080);
-		
+
+		// Request Controllers
+		//
 		app.post("/add", medsController.addMed_Controller);
+		bot.on('message', (msg) => {
+			if(msg.text == "/start") {
+				var message = "";
+				medsModel.getMed_model((err, docs) => {
+					if(err) {
+						return console.log(err);
+					}
+					else {
+						for(var clinic of docs) {
+							message += clinic.name + " " + clinic.location + "\n";
+						}
+					}
+					bot.sendMessage(msg.chat.id, message);
+				});
+			}
+		})
 	}
 })
