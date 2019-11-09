@@ -42,12 +42,26 @@ db.connect(config.mongouri, config.mogoname, (err) => {
 					var buttons = []
 					var message = "";
 					for(var part of Object.keys(result.parts)) {
-						buttons.push([{"text": part, "callback_data": "part " + part}])
+						buttons.push([{"text": part, "callback_data": "part " + num + " " + part}])
 					}
 					bot.sendMessage(msg.message.chat.id, "Выберите отдел", {reply_markup: JSON.stringify({
 						inline_keyboard: buttons
 					})});
 				})
+			}
+			else if(splitMsg[0] == "part") {
+				medsModel.getMedbyNumber_model(splitMsg[1], (err, result) => {
+					if(result == "not find")
+						return console.log(result);
+					var buttons = [];
+					for(var chel of result[splitMsg[2]]) {
+						buttons.push([{"text": chel, "callback_data": "chel " + num + " " + part + " " + chel}])
+					}
+						
+					bot.sendMessage(msg.message.chat.id, "Выберите врача", {reply_markup: JSON.stringify({
+						inline_keyboard: buttons
+					})});
+				});
 			}
 		});
 		
