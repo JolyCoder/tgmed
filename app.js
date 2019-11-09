@@ -43,7 +43,9 @@ db.connect(config.mongouri, config.mogoname, (err) => {
 							buttons.push({"text": clinic.name, "callback_data": clinic.num})
 						}
 					}
-					bot.sendMessage(msg.chat.id, "Выберите клинику", buttons);
+					bot.sendMessage(msg.chat.id, "Выберите клинику", {reply_markup: JSON.stringify({
+						inline_keyboard: buttons
+					})});
 				});
 			}
 			else {
