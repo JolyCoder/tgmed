@@ -19,6 +19,6 @@ exports.getMedbyNumber_model = (num, cb) => {
 				return cb(err, clinic);
 			}
 		}
-		cb(err, result);
 	});
+	return cb(err, "not find");
 };

@@ -47,6 +47,9 @@ db.connect(config.mongouri, config.mogoname, (err) => {
 			}
 			else {
 				medsModel.getMedbyNumber_model(msg.text, (err, result) => {
+					if(result == "not find") {
+						return console.log(result);
+					}
 					var message = "";
 					for(var part of Object.keys(result.parts)) {
 						message += part + "\n";
