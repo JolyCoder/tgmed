@@ -6,7 +6,8 @@ const express = require("express"),
 	  medsController = require("./controllers/meds"),
 	  medsModel = require("./models/med"),
 	  scheduleModel = require("./models/schedule"),
-	  CronJob = require("cron").CronJob;
+	  CronJob = require("cron").CronJob,
+	  cardModel = require("./models/cards");
 
 var app = express();
 
@@ -142,6 +143,15 @@ db.connect(config.mongouri, config.mogoname, (err) => {
 					})
 				}
 				bot.sendMessage(current_connects[msg.chat.id], "Врач предлагает вам записаться на прием, желаете записаться?", buttons);
+			}
+			else if(msg.text == "/getCard") {
+					cardModel.getCard(current_connects[msg.chat.id], (err, card) => {
+						var message = card.name + "\n" +
+									  card.bolz + "\n" +
+									  card.gk + "\n" +
+									  card.adrs + "\n";
+						bot.sendMessage(msg.chat.id, message);
+					});
 			}
 			else {
 				if(current_connects[msg.chat.id])
