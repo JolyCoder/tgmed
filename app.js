@@ -39,6 +39,7 @@ db.connect(config.mongouri, config.mogoname, (err) => {
 					if(result == "not find") {
 						return console.log(result);
 					}
+					var buttons = []
 					var message = "";
 					for(var part of Object.keys(result.parts)) {
 						buttons.push([{"text": part, "callback_data": "part " + part}])
