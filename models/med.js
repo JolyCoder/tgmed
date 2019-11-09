@@ -14,9 +14,9 @@ exports.getMed_model = (cb) => {
 
 exports.getMedbyNumber_model = (num, cb) => {
 	db.get().collection("meds").find().toArray((err, result) => {
-		for(var clinic of docs) {
+		for(var clinic of result) {
 			if(clinic.num == num) {
-				return cb(err, result);
+				return cb(err, clinic);
 			}
 		}
 		cb(err, result);
