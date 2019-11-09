@@ -41,7 +41,7 @@ db.connect(config.mongouri, config.mogoname, (err) => {
 			scheduleModel.getSchedules((err, docs) => {
 				var now = new Date().getHours();
 				for(var schedule of docs) {
-					if(parseInt(schedule.from) >= now && parseInt(schedule.to) <= now && (new Date().getHours() * 60 + new Date().getMinutes()) % on == (schedule.from * 60) % on) {
+					if(parseInt(schedule.from) >= now && parseInt(schedule.to) <= now && (new Date().getHours() * 60 + new Date().getMinutes()) % on == (parseInt(schedule.from) * 60) % on) {
 						bot.sendMessage(schedule.id, "Пора пить лекарство!");
 					}
 				}
