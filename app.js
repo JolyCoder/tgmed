@@ -31,7 +31,7 @@ db.connect(config.mongouri, config.mogoname, (err) => {
 		//
 		app.post("/add", medsController.addMed_Controller);
 
-		bot.on("callback_data", (msg) => {
+		bot.on("callback_query", (msg) => {
 			var splitMsg = msg.data.split(" ");
 			console.log(splitMsg);
 			if(splitMsg[0] == "clinic") {
