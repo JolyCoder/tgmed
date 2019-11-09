@@ -20,7 +20,7 @@ const bot = new TelegramBot("963374939:AAECJC50Qi4iaROG8j48JKBQ48L5Udt9-m8", {
 
 var current_connects = []
 
-db.connect(config.mongouri, config.mogoname, (err) => {
+/* db.connect(config.mongouri, config.mogoname, (err) => {
 	if(err) {
 		return console.log(err);
 	}
@@ -85,4 +85,4 @@ db.connect(config.mongouri, config.mogoname, (err) => {
 			}
 		})
 	}
-})
+})*/
