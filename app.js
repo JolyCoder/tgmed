@@ -30,6 +30,25 @@ db.connect(config.mongouri, config.mogoname, (err) => {
 		// Request Controllers
 		//
 		app.post("/add", medsController.addMed_Controller);
+
+		bot.on("callback_data", (msg) => {
+			var splitMsg = msg.data.split(" ");
+			if(splitMsg[0] == "clinic") {
+				medsModel.getMedbyNumber_model(splitMsg[1], (err, result) => {
+					if(result == "not find") {
+						return console.log(result);
+					}
+					var message = "";
+					for(var part of Object.keys(result.parts)) {
+						buttons.push([{"text": part, "callback_data": "part " + part}])
+					}
+					bot.sendMessage(msg.chat.id, "Выберите отдел", {reply_markup: JSON.stringify({
+						inline_keyboard: buttons
+					})});
+				})
+			}
+		});
+		
 		bot.on('message', (msg) => {
 			if(msg.text == "/start") {
 				medsModel.getMed_model((err, docs) => {
@@ -40,25 +59,13 @@ db.connect(config.mongouri, config.mogoname, (err) => {
 					}
 					else {
 						for(var clinic of docs) {
-							buttons.push([{"text": clinic.name, "callback_data": clinic.num}])
+							buttons.push([{"text": clinic.name, "callback_data": "clinic " + clinic.num}])
 						}
 					}
 					bot.sendMessage(msg.chat.id, "Выберите клинику", {reply_markup: JSON.stringify({
 						inline_keyboard: buttons
 					})});
 				});
-			}
-			else {
-				medsModel.getMedbyNumber_model(msg.text, (err, result) => {
-					if(result == "not find") {
-						return console.log(result);
-					}
-					var message = "";
-					for(var part of Object.keys(result.parts)) {
-						message += part + "\n";
-					}
-					bot.sendMessage(msg.chat.id, message);
-				})
 			}
 		})
 	}
