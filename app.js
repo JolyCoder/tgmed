@@ -54,6 +54,7 @@ db.connect(config.mongouri, config.mogoname, (err) => {
 					for(var part of Object.keys(result.parts)) {
 						message += part + "\n";
 					}
+					bot.sendMessage(msg.chat.id, message);
 				})
 			}
 		})
