@@ -14,7 +14,6 @@ app.use(express.urlencoded({
 }));
 app.use(cookie_parser());
 
-const TelegramBot = require('node-telegram-bot-api');
 const bot = new TelegramBot("963374939:AAECJC50Qi4iaROG8j48JKBQ48L5Udt9-m8", {
 	polling: true
 });
