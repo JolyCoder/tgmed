@@ -32,14 +32,14 @@ db.connect(config.mongouri, config.mogoname, (err) => {
 		app.post("/add", medsController.addMed_Controller);
 		bot.on('message', (msg) => {
 			if(msg.text == "/start") {
-				var message = "";
 				medsModel.getMed_model((err, docs) => {
+					var message = "";
 					if(err) {
 						return console.log(err);
 					}
 					else {
 						for(var clinic of docs) {
-							message += clinic.num + " " clinic.name + " " + clinic.location + "\n";
+							message += clinic.num + " " + clinic.name + " " + clinic.location + "\n";
 						}
 					}
 					bot.sendMessage(msg.chat.id, message);
