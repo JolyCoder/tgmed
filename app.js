@@ -57,7 +57,7 @@ db.connect(config.mongouri, config.mogoname, (err) => {
 					for(var chel of result.parts[splitMsg[2]]) {
 						buttons.push([{"text": chel.name, "callback_data": "chel " + splitMsg[1] + " " + splitMsg[2] + " " + chel.name}])
 					}
-						
+					console.log(buttons)	
 					bot.sendMessage(msg.message.chat.id, "Выберите врача", {reply_markup: JSON.stringify({
 						inline_keyboard: buttons
 					})});
