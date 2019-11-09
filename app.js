@@ -14,6 +14,7 @@ app.use(express.urlencoded({
 app.use(cookie_parser());
 
 
+
 db.connect(config.mongouri, config.mogoname, (err) => {
 	if(err) {
 		return console.log(err);
@@ -21,6 +22,8 @@ db.connect(config.mongouri, config.mogoname, (err) => {
 	else {
 		// Request Controllers
 
+		app.listen(process.env.PORT || 8080);
+		
 		app.post("/add", medsController.addMed_Controller);
 	}
 })
