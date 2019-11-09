@@ -40,7 +40,7 @@ db.connect(config.mongouri, config.mogoname, (err) => {
 					}
 					else {
 						for(var clinic of docs) {
-							buttons.push({"text": clinic.name, "callback_data": clinic.num})
+							buttons.push([{"text": clinic.name, "callback_data": clinic.num}])
 						}
 					}
 					bot.sendMessage(msg.chat.id, "Выберите клинику", {reply_markup: JSON.stringify({
