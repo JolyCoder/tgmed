@@ -69,6 +69,10 @@ db.connect(config.mongouri, config.mogoname, (err) => {
 				if(current_queue[msg.data] == undefined || current_queue[msg.data].length == 0) {
 					current_connects[msg.data] = msg.message.chat.id;
 					current_connects[msg.message.chat.id] = msg.data;
+					bot.sendMessage(msg.message.chat.id, "Вы подключены к врачу!");
+				}
+				else {
+					current_queue[msg.data].push(msg.message.chat.id);
 				}
 			}
 		});
@@ -90,6 +94,9 @@ db.connect(config.mongouri, config.mogoname, (err) => {
 						inline_keyboard: buttons
 					})});
 				});
+			}
+			else {
+				bot.sendMessage(current_connects[msg.chat.id], msg.text);
 			}
 		})
 	}
