@@ -18,7 +18,9 @@ const bot = new TelegramBot("963374939:AAECJC50Qi4iaROG8j48JKBQ48L5Udt9-m8", {
 	polling: true
 });
 
-var current_connects = []
+var current_connects = {}
+
+var current_queue = []
 
 db.connect(config.mongouri, config.mogoname, (err) => {
 	if(err) {
@@ -55,13 +57,19 @@ db.connect(config.mongouri, config.mogoname, (err) => {
 						return console.log(result);
 					var buttons = [];
 					for(var chel of result.parts[splitMsg[2]]) {
-						buttons.push([{"text": chel.name, "callback_data": "chel " + splitMsg[1] + " " + splitMsg[2]}])
+						buttons.push([{"text": chel.name, "callback_data": chel.id}])
 					}
 					console.log(buttons)	
 					bot.sendMessage(msg.message.chat.id, "Выберите врача", {reply_markup: JSON.stringify({
 						inline_keyboard: buttons
 					})});
 				});
+			}
+			else {
+				if(current_queue[msg.data] == undefined || current_queue[msg.data].length == 0) {
+					current_connects[msg.data] = msg.message.chat.id;
+					current_connects[msg.message.chat.id] = msg.data;
+				}
 			}
 		});
 		
