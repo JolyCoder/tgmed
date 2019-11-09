@@ -34,15 +34,16 @@ db.connect(config.mongouri, config.mogoname, (err) => {
 			if(msg.text == "/start") {
 				medsModel.getMed_model((err, docs) => {
 					var message = "";
+					var buttons = []
 					if(err) {
 						return console.log(err);
 					}
 					else {
 						for(var clinic of docs) {
-							message += clinic.num + " " + clinic.name + " " + clinic.location + "\n";
+							buttons.push({"text": clinic.name, "callback_data": clinic.num})
 						}
 					}
-					bot.sendMessage(msg.chat.id, message);
+					bot.sendMessage(msg.chat.id, "Выберите клинику", buttons);
 				});
 			}
 			else {
