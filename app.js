@@ -42,7 +42,7 @@ db.connect(config.mongouri, config.mogoname, (err) => {
 					var buttons = []
 					var message = "";
 					for(var part of Object.keys(result.parts)) {
-						buttons.push([{"text": part, "callback_data": "part " + splitMsg[1] + " " + part}])
+						buttons.push([{"text": part.toString(), "callback_data": "part " + splitMsg[1] + " " + part}])
 					}
 					bot.sendMessage(msg.message.chat.id, "Выберите отдел", {reply_markup: JSON.stringify({
 						inline_keyboard: buttons
