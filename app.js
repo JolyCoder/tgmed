@@ -86,7 +86,7 @@ db.connect(config.mongouri, config.mogoname, (err) => {
 				});
 			}
 			else {
-				if(current_queue[msg.data] == undefined || current_queue[msg.data].length == 0) {
+				if((current_queue[msg.data] == undefined || current_queue[msg.data].length == 0) && !current_connects[msg.data]) {
 					current_connects[msg.data] = msg.message.chat.id;
 					current_connects[msg.message.chat.id] = msg.data;
 					bot.sendMessage(msg.message.chat.id, "Вы подключены к врачу!");
@@ -127,6 +127,21 @@ db.connect(config.mongouri, config.mogoname, (err) => {
 					if(err)
 						return console.log(err);
 				});
+			}
+			else if(msg.text == "/disconnect") {
+				bot.sendMessage(current_connects[msg.chat.id], "Вы отключены!");
+				bot.sendMessage(msg.chat.id, "Вы отключены!");
+			}
+			else if(msg.text == "/addMed") {
+				var buttons = {
+					reply_markup: JSON.stringify({
+						inline_keyboard: [
+							[{"text": "Да", "callback_data": "answer 1"}],
+							[{"text": "Нет", "callback_data": "answer 0"}]
+						]
+					})
+				}
+				bot.sendMessage(current_connects[msg.chat.id], "Врач предлагает вам записаться на прием, желаете записаться?", buttons);
 			}
 			else {
 				if(current_connects[msg.chat.id])
