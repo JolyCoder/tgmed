@@ -20,9 +20,9 @@ const bot = new TelegramBot("963374939:AAECJC50Qi4iaROG8j48JKBQ48L5Udt9-m8", {
 	polling: true
 });
 
-var current_connects = {}
+var current_connects = {};
 
-var current_queue = []
+var current_queue = [];
 
 db.connect(config.mongouri, config.mogoname, (err) => {
 	if(err) {
@@ -42,7 +42,7 @@ db.connect(config.mongouri, config.mogoname, (err) => {
 			scheduleModel.getSchedules((err, docs) => {
 				var now = new Date().getHours();
 				for(var schedule of docs) {
-					if(parseInt(schedule.from) >= now && parseInt(schedule.to) <= now && (new Date().getHours() * 60 + new Date().getMinutes()) % on == (parseInt(schedule.from) * 60) % on) {
+					if((now * 60 + new Date().getMinutes()) % parseInt(schedule.on) == 0 && now >= parseInt(schedule.from) && now <= parseInt(schedule.to)) {
 						bot.sendMessage(schedule.id, "Пора пить лекарство!");
 					}
 				}
@@ -60,10 +60,10 @@ db.connect(config.mongouri, config.mogoname, (err) => {
 					if(result == "not find") {
 						return console.log(result);
 					}
-					var buttons = []
+					var buttons = [];
 					var message = "";
 					for(var part of Object.keys(result.parts)) {
-						buttons.push([{"text": part.toString(), "callback_data": "part " + splitMsg[1] + " " + part}])
+						buttons.push([{"text": part.toString(), "callback_data": "part " + splitMsg[1] + " " + part}]);
 					}
 					bot.sendMessage(msg.message.chat.id, "Выберите отдел", {reply_markup: JSON.stringify({
 						inline_keyboard: buttons
@@ -76,9 +76,9 @@ db.connect(config.mongouri, config.mogoname, (err) => {
 						return console.log(result);
 					var buttons = [];
 					for(var chel of result.parts[splitMsg[2]]) {
-						buttons.push([{"text": chel.name, "callback_data": chel.id}])
+						buttons.push([{"text": chel.name, "callback_data": chel.id}]);
 					}
-					console.log(buttons)	
+					console.log(buttons);
 					bot.sendMessage(msg.message.chat.id, "Выберите врача", {reply_markup: JSON.stringify({
 						inline_keyboard: buttons
 					})});
@@ -100,13 +100,13 @@ db.connect(config.mongouri, config.mogoname, (err) => {
 			if(msg.text == "/start") {
 				medsModel.getMed_model((err, docs) => {
 					var message = "";
-					var buttons = []
+					var buttons = [];
 					if(err) {
 						return console.log(err);
 					}
 					else {
 						for(var clinic of docs) {
-							buttons.push([{"text": clinic.name, "callback_data": "clinic " + clinic.num}])
+							buttons.push([{"text": clinic.name, "callback_data": "clinic " + clinic.num}]);
 						}
 					}
 					bot.sendMessage(msg.chat.id, "Выберите клинику", {reply_markup: JSON.stringify({
@@ -131,7 +131,7 @@ db.connect(config.mongouri, config.mogoname, (err) => {
 				if(current_connects[msg.chat.id])
 					bot.sendMessage(current_connects[msg.chat.id], msg.text);
 				else
-					bot.sendMessage(msg.chat.id, "Неверная команда!")
+					bot.sendMessage(msg.chat.id, "Неверная команда!");
 			}
 		})
 	}
