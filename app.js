@@ -33,6 +33,7 @@ db.connect(config.mongouri, config.mogoname, (err) => {
 
 		bot.on("callback_data", (msg) => {
 			var splitMsg = msg.data.split(" ");
+			console.log(splitMsg);
 			if(splitMsg[0] == "clinic") {
 				medsModel.getMedbyNumber_model(splitMsg[1], (err, result) => {
 					if(result == "not find") {
