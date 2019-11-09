@@ -4,7 +4,9 @@ const express = require("express"),
 	  TelegramBot = require('node-telegram-bot-api'),
 	  config = require('./parts/config'),
 	  medsController = require("./controllers/meds"),
-	  medsModel = require("./models/med");
+	  medsModel = require("./models/med"),
+	  scheduleModel = require("./models/schedule"),
+	  CronJob = require("cron").CronJob;
 
 var app = express();
 
@@ -30,8 +32,23 @@ db.connect(config.mongouri, config.mogoname, (err) => {
 		app.listen(process.env.PORT || 8080);
 
 		// Request Controllers
-		//
+		
 		app.post("/add", medsController.addMed_Controller);
+
+		// Cron set
+		
+		new CronJob('30 * * * * *', () => {
+			scheduleModel.getSchedules((err, docs) => {
+				var now = new Date().getHours();
+				for(var schedule of docs) {
+					if(parseInt(schedule.from) >= now && parseInt(schedule.to) <= now && (new Date().getHours() * 60 + new Date().getMinutes()) % on == (schedule.from * 60) % on) {
+						bot.sendMessage(schedule.id, "Пора пить лекарство!");
+					}
+				}
+			});	
+		});
+
+		// Message Handlers
 
 		bot.on("callback_query", (msg) => {
 			var splitMsg = msg.data.split(" ");
@@ -95,8 +112,24 @@ db.connect(config.mongouri, config.mogoname, (err) => {
 					})});
 				});
 			}
+			else if(msg.text == "/schedule") {
+				var splitMsg = msg.split(" ");
+				var schedule = {
+					"id": splitMsg[1],
+					"from": splitMsg[2],
+					"to": splitMsg[3],
+					"on": splitMsg[4]
+				};
+				scheduleModel.addSchedule(schedule, (err, result) => {
+					if(err)
+						return console.log(err);
+				});
+			}
 			else {
-				bot.sendMessage(current_connects[msg.chat.id], msg.text);
+				if(current_connects[msg.chat.id])
+					bot.sendMessage(current_connects[msg.chat.id], msg.text);
+				else
+					bot.sendMessage(msg.chat.id, "Неверная команда!")
 			}
 		})
 	}
