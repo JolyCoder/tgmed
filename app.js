@@ -38,6 +38,7 @@ db.connect(config.mongouri, config.mogoname, (err) => {
 		// Cron set
 		
 		new CronJob('30 * * * * *', () => {
+			console.log("Cron Work!");
 			scheduleModel.getSchedules((err, docs) => {
 				var now = new Date().getHours();
 				for(var schedule of docs) {
