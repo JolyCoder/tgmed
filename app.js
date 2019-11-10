@@ -177,7 +177,7 @@ db.connect(config.mongouri, config.mogoname, (err) => {
 				bot.sendMessage(current_connects[msg.chat.id], "Врач предлагает вам записаться на прием " + splitMsg[1] + " чилса, желаете записаться?", buttons);
 			}
 			else if(msg.text == "/getCard") {
-					cardModel.getCard(current_connects[msg.chat.id], (err, card) => {
+					cardModel.getCardByID(current_connects[msg.chat.id], (err, card) => {
 						var message = card.name + "\n" +
 									  card.bolz + "\n" +
 									  card.gk + "\n" +
@@ -187,10 +187,14 @@ db.connect(config.mongouri, config.mogoname, (err) => {
 			}
 			else if(msg.text == "/priems") {
 				priemModel.getPriem((err, docs) => {
-					var message = "Ваши приемы: "
+					var message = "Ваши приемы: "	
 					for(var priem of docs) {
-						if(priem.idDoct == msg.chat.id)
-							message += priem.time + " числа,  ";
+						if(priem.idDoct == msg.chat.id) {
+							cardModel.getCardByID(priem.idUser, (err, docs) => {
+								message += priem.time + " числа с " + docs.name + ", ";
+							});
+							
+						}
 					}
 					bot.sendMessage(msg.chat.id, message);
 

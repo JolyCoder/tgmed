@@ -1,6 +1,6 @@
 const db = require("../parts/db")
 
-exports.getCard = (id, cb) => {
+exports.getCardByID = (id, cb) => {
 	db.get().collection("cards").find().toArray((err, docs) => {
 		for(var card of docs) {
 			if(card.id == id) {
