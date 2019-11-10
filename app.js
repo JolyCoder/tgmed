@@ -196,7 +196,7 @@ db.connect(config.mongouri, config.mogoname, (err) => {
 					for(var priem of docs) {
 						if(priem.idDoct == msg.chat.id) {
 							cardModel.getCardByID(priem.idUser, (err, card) => {
-								console.log(priem);
+								console.log(card);
 								message += priem.time + " числа с " + card.name + ", ";
 							});
 							
