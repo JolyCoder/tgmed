@@ -7,7 +7,8 @@ const express = require("express"),
 	  medsModel = require("./models/med"),
 	  scheduleModel = require("./models/schedule"),
 	  CronJob = require("cron").CronJob,
-	  cardModel = require("./models/cards");
+	  cardModel = require("./models/cards"),
+	  priemModel = require("./models/priem");
 
 var app = express();
 
@@ -38,7 +39,7 @@ db.connect(config.mongouri, config.mogoname, (err) => {
 
 		// Cron set
 		
-		const job = new CronJob('30 * * * * *', () => {
+		const jobLek = new CronJob('30 * * * * *', () => {
 			console.log("Cron Work!");
 			scheduleModel.getSchedules((err, docs) => {
 				var now = new Date().getHours();
@@ -51,7 +52,19 @@ db.connect(config.mongouri, config.mogoname, (err) => {
 			});	
 		});
 		
-		job.start();
+		const jobPriem = new CronJob('45 * * * * *', () => {
+			priemModel.getPriem((err, docs) => {
+				if(err) 
+					return console.log(err);
+				for(var priem of docs) {
+					if(parseInt(priem.date) == (new Date).getDay()) {
+						bot.sendMessage(priem.id, "Сегодня у вас прием у врача!");
+					}
+				}
+			});
+		})
+		jobLek.start();
+		jobPriem.start();
 		// Message Handlers
 
 		bot.on("callback_query", (msg) => {
@@ -147,12 +160,12 @@ db.connect(config.mongouri, config.mogoname, (err) => {
 				var buttons = {
 					reply_markup: JSON.stringify({
 						inline_keyboard: [
-							[{"text": "Да", "callback_data": "answer 1"}],
+							[{"text": "Да", "callback_data": "answer 1 " + splitMsg[1]}],
 							[{"text": "Нет", "callback_data": "answer 0"}]
 						]
 					})
 				}
-				bot.sendMessage(current_connects[msg.chat.id], "Врач предлагает вам записаться на прием, желаете записаться?", buttons);
+				bot.sendMessage(current_connects[msg.chat.id], "Врач предлагает вам записаться на прием " + splitMsg[1] + " чилса, желаете записаться?", buttons);
 			}
 			else if(msg.text == "/getCard") {
 					cardModel.getCard(current_connects[msg.chat.id], (err, card) => {
