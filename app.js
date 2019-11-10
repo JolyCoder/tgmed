@@ -190,8 +190,6 @@ db.connect(config.mongouri, config.mogoname, (err) => {
 			}
 			else if(msg.text == "/priems") {
 				priemModel.getPriem((err, docs) => {
-					if(err)
-						return;
 					var message = "Ваши приемы: "	
 					for(var priem of docs) {
 						if(priem.idDoct == msg.chat.id) {
