@@ -158,8 +158,8 @@ db.connect(config.mongouri, config.mogoname, (err) => {
 				var buttons = {
 					reply_markup: JSON.stringify({
 						inline_keyboard: [
-							[{"text": "Да", "callback_data": "answer 1 " + splitMsg[1]}],
-							[{"text": "Нет", "callback_data": "answer 0"}]
+							[{"text": "Да", "callback_data": "answer yes " + splitMsg[1]}],
+							[{"text": "Нет", "callback_data": "answer no"}]
 						]
 					})
 				}
