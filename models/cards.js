@@ -1,6 +1,5 @@
 const db = require("../parts/db")
 
-<<<<<<< HEAD
 exports.getCard = (id, cb) => {
 	db.get().collection("cards").find().toArray((err, docs) => {
 		for(var card of docs) {
@@ -10,10 +9,10 @@ exports.getCard = (id, cb) => {
 		}
 	});
 	return cb("not find", []);
-=======
+
 exports.getCard = (cb) => {
 	db.get().collection("cards").find().toArray((err, docs) => {
 		cb(err, docs)
 	});
->>>>>>> dev
+
 };
