@@ -112,15 +112,9 @@ db.connect(config.mongouri, config.mogoname, (err) => {
 				}
 			}
 			else {
-				if((current_queue[msg.data] == undefined || current_queue[msg.data].length == 0) && !current_connects[msg.data]) {
-					current_connects[msg.data] = msg.message.chat.id;
-					current_connects[msg.message.chat.id] = msg.data;
-					bot.sendMessage(msg.message.chat.id, "Вы подключены к врачу!");
-				}
-				else {
-					current_queue[msg.data].push(msg.message.chat.id);
-					bot.sendMessage(msg.message.chat.id, "Вы записаны в очередь!");
-				}
+				current_connects[msg.data] = msg.message.chat.id;
+				current_connects[msg.message.chat.id] = msg.data;
+				bot.sendMessage(msg.message.chat.id, "Вы подключены к врачу!");
 			}
 		});
 		
