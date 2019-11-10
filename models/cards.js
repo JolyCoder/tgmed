@@ -5,6 +5,7 @@ exports.getCardByID = (id, cb) => {
 		for(var card of docs) {
 			console.log("card", card)
 			if(card.id == id) {
+				console.log("IM HERE");
 				return cb(err, card);
 			}
 		}
