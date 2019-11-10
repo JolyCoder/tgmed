@@ -28,6 +28,8 @@ var current_connects = {};
 
 var current_queue = [];
 
+var notifications = [];
+
 db.connect(config.mongouri, config.mogoname, (err) => {
 	if(err) {
 		return console.log(err);
@@ -59,8 +61,9 @@ db.connect(config.mongouri, config.mogoname, (err) => {
 				if(err) 
 					return console.log(err);
 				for(var priem of docs) {
-					if(parseInt(priem.time) == (new Date).getDate()) {
+					if(parseInt(priem.time) == (new Date).getDate() && !notifications.includes(priem.idUser)) {
 						bot.sendMessage(priem.idUser, "Сегодня у вас прием у врача!");
+						notifications.push(priem.idUser);
 					}
 				}
 			});
