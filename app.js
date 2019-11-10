@@ -184,12 +184,13 @@ db.connect(config.mongouri, config.mogoname, (err) => {
 			}
 			else if(msg.text == "/priems") {
 				priemModel.getPriem((err, docs) => {
-					var message = ""
+					var message = "Ваши приемы: "
 					for(var priem of docs) {
 						if(priem.idDoct == msg.chat.id)
-							message += priem.time + " ";
+							message += priem.time + " числа,  ";
 					}
 					bot.sendMessage(msg.chat.id, message);
+
 				});
 			}
 			else {
