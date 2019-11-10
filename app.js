@@ -104,6 +104,14 @@ db.connect(config.mongouri, config.mogoname, (err) => {
 			else if(splitMsg[0] == "answer") {
 				if(splitMsg[1] == "yes") {
 					bot.sendMessage(msg.message.chat.id, "Вы добавлены в очередь!");
+					priemModel.addPriem({
+						"idUser": msg.message.chat.id,
+						"idDoct": current_connects[msg.message.chat.id],
+						"time": splitMsg[2]
+					}, (err, docs) => {
+						if(err)
+							return console.log(err);
+					});
 					bot.sendMessage(current_connects[msg.message.chat.id], "Клиент согласился и был записан на прием!");
 				}
 				else {
@@ -173,6 +181,16 @@ db.connect(config.mongouri, config.mogoname, (err) => {
 									  card.adrs + "\n";
 						bot.sendMessage(msg.chat.id, message);
 					});
+			}
+			else if(msg.text == "/priems") {
+				priemModel.getPriem((err, docs) => {
+					var message = ""
+					for(var priem of docs) {
+						if(priem.idDoct == msg.chat.id)
+							message += priem.date + " ";
+					}
+					bot.sendMessage(msg.chat.id, message);
+				});
 			}
 			else {
 				console.log(current_connects);

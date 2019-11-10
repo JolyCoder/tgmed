@@ -5,3 +5,9 @@ exports.getPriem = (cb) => {
 		cb(err, docs);	
 	});
 }
+
+exports.addPriem = (priem, cb) => {
+	db.get().insertOne(priem, (err, docs) => {
+		cb(err, docs);
+	});
+}
