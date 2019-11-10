@@ -187,7 +187,7 @@ db.connect(config.mongouri, config.mogoname, (err) => {
 					var message = ""
 					for(var priem of docs) {
 						if(priem.idDoct == msg.chat.id)
-							message += priem.date + " ";
+							message += priem.time + " ";
 					}
 					bot.sendMessage(msg.chat.id, message);
 				});
