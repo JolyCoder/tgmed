@@ -181,10 +181,7 @@ db.connect(config.mongouri, config.mogoname, (err) => {
 			}
 			else {
 				console.log(current_connects);
-				if(current_connects[msg.chat.id] != undefined && current_connects[msg.chat.id] != "")
-					bot.sendMessage(current_connects[msg.chat.id], msg.text);
-				else
-					bot.sendMessage(msg.chat.id, "Неверная команда!");
+				bot.sendMessage(current_connects[msg.chat.id], msg.text);
 			}
 		})
 	}
