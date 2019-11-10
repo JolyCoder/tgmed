@@ -105,8 +105,8 @@ db.connect(config.mongouri, config.mogoname, (err) => {
 				if(splitMsg[1] == "yes") {
 					bot.sendMessage(msg.message.chat.id, "Вы добавлены в очередь!");
 					priemModel.addPriem({
-						"idUser": msg.message.chat.id,
-						"idDoct": current_connects[msg.message.chat.id],
+						"idUser": msg.message.chat.id.toString(),
+						"idDoct": current_connects[msg.message.chat.id].toString(),
 						"time": splitMsg[2]
 					}, (err, docs) => {
 						if(err)
