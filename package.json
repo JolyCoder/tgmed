@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "format": "node ./scripts/format"
   },
   "author": "",
   "license": "ISC",
@@ -12,6 +13,7 @@
     "cookie-parser": "^1.4.4",
     "cron": "^1.7.2",
     "express": "^4.17.1",
+    "js-beautify": "^1.10.2",
     "mongodb": "^3.3.3",
     "node-telegram-bot-api": "^0.40.0"
   }

@@ -6,7 +6,9 @@ const express = require("express"),
 	  medsController = require("./controllers/meds"),
 	  medsModel = require("./models/med"),
 	  scheduleModel = require("./models/schedule"),
-	  CronJob = require("cron").CronJob;
+	  CronJob = require("cron").CronJob,
+	  cardModel = require("./models/cards"),
+	  priemModel = require("./models/priem");
 
 var app = express();
 
@@ -20,9 +22,13 @@ const bot = new TelegramBot("963374939:AAECJC50Qi4iaROG8j48JKBQ48L5Udt9-m8", {
 	polling: true
 });
 
+
+
 var current_connects = {};
 
 var current_queue = [];
+
+var notifications = [];
 
 db.connect(config.mongouri, config.mogoname, (err) => {
 	if(err) {
@@ -37,7 +43,7 @@ db.connect(config.mongouri, config.mogoname, (err) => {
 
 		// Cron set
 		
-		const job = new CronJob('30 * * * * *', () => {
+		const jobLek = new CronJob('30 * * * * *', () => {
 			console.log("Cron Work!");
 			scheduleModel.getSchedules((err, docs) => {
 				var now = new Date().getHours();
@@ -50,7 +56,20 @@ db.connect(config.mongouri, config.mogoname, (err) => {
 			});	
 		});
 		
-		job.start();
+		const jobPriem = new CronJob('45 * * * * *', () => {
+			priemModel.getPriem((err, docs) => {
+				if(err) 
+					return console.log(err);
+				for(var priem of docs) {
+					if(parseInt(priem.time) == (new Date).getDate() && !notifications.includes(priem.idUser)) {
+						bot.sendMessage(priem.idUser, "Сегодня у вас прием у врача!");
+						notifications.push(priem.idUser);
+					}
+				}
+			});
+		})
+		jobLek.start();
+		jobPriem.start();
 		// Message Handlers
 
 		bot.on("callback_query", (msg) => {
@@ -85,19 +104,33 @@ db.connect(config.mongouri, config.mogoname, (err) => {
 					})});
 				});
 			}
-			else {
-				if(current_queue[msg.data] == undefined || current_queue[msg.data].length == 0) {
-					current_connects[msg.data] = msg.message.chat.id;
-					current_connects[msg.message.chat.id] = msg.data;
-					bot.sendMessage(msg.message.chat.id, "Вы подключены к врачу!");
+			else if(splitMsg[0] == "answer") {
+				if(splitMsg[1] == "yes") {
+					bot.sendMessage(msg.message.chat.id, "Вы добавлены в очередь!");
+					priemModel.addPriem({
+						"idUser": msg.message.chat.id.toString(),
+						"idDoct": current_connects[msg.message.chat.id].toString(),
+						"time": splitMsg[2]
+					}, (err, docs) => {
+						if(err)
+							return console.log(err);
+					});
+					bot.sendMessage(current_connects[msg.message.chat.id], "Клиент согласился и был записан на прием!");
 				}
 				else {
-					current_queue[msg.data].push(msg.message.chat.id);
+					bot.sendMessage(msg.message.chat.id, "Запрос отклонен");
+					bot.sendMessage(current_connects[msg.message.chat.id], "Запрос отклонен");
 				}
+			}
+			else {
+				current_connects[msg.data] = msg.message.chat.id;
+				current_connects[msg.message.chat.id] = msg.data;
+				bot.sendMessage(msg.message.chat.id, "Вы подключены к врачу!");
 			}
 		});
 		
 		bot.on('message', (msg) => {
+			var splitMsg = msg.text.split(" ");
 			if(msg.text == "/start") {
 				medsModel.getMed_model((err, docs) => {
 					var message = "";
@@ -128,11 +161,48 @@ db.connect(config.mongouri, config.mogoname, (err) => {
 						return console.log(err);
 				});
 			}
+			else if(msg.text == "/disconnect") {
+				bot.sendMessage(current_connects[msg.chat.id], "Вы отключены!");
+				bot.sendMessage(msg.chat.id, "Вы отключены!");
+			}
+			else if(splitMsg[0] == "/addMed") {
+				var buttons = {
+					reply_markup: JSON.stringify({
+						inline_keyboard: [
+							[{"text": "Да", "callback_data": "answer yes " + splitMsg[1]}],
+							[{"text": "Нет", "callback_data": "answer no"}]
+						]
+					})
+				}
+				bot.sendMessage(current_connects[msg.chat.id], "Врач предлагает вам записаться на прием " + splitMsg[1] + " чилса, желаете записаться?", buttons);
+			}
+			else if(msg.text == "/getCard") {
+					cardModel.getCardByID(current_connects[msg.chat.id], (err, card) => {
+						if(err)
+							return;
+						console.log(card);
+						var message = card.name + "\n" +
+									  card.bolz + "\n" +
+									  card.gk + "\n" +
+									  card.adrs + "\n";
+						bot.sendMessage(msg.chat.id, message);
+					});
+			}
+			else if(msg.text == "/priems") {
+				priemModel.getPriem((err, docs) => {
+					var message = "Ваши приемы: "	
+					for(var priem of docs) {
+						if(priem.idDoct == msg.chat.id) {
+							message += priem.time + " числа, ";							
+						}
+					}
+					bot.sendMessage(msg.chat.id, message);
+
+				});
+			}
 			else {
-				if(current_connects[msg.chat.id])
-					bot.sendMessage(current_connects[msg.chat.id], msg.text);
-				else
-					bot.sendMessage(msg.chat.id, "Неверная команда!");
+				console.log(current_connects);
+				bot.sendMessage(current_connects[msg.chat.id], msg.text);
 			}
 		})
 	}
