@@ -119,6 +119,7 @@ db.connect(config.mongouri, config.mogoname, (err) => {
 		});
 		
 		bot.on('message', (msg) => {
+			var splitMsg = msg.text.split(" ");
 			if(msg.text == "/start") {
 				medsModel.getMed_model((err, docs) => {
 					var message = "";
@@ -147,8 +148,7 @@ db.connect(config.mongouri, config.mogoname, (err) => {
 				scheduleModel.addSchedule(schedule, (err, result) => {
 					if(err)
 						return console.log(err);
-				});
-			}
+				}
 			else if(msg.text == "/disconnect") {
 				bot.sendMessage(current_connects[msg.chat.id], "Вы отключены!");
 				bot.sendMessage(msg.chat.id, "Вы отключены!");
