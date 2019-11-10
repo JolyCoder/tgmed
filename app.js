@@ -195,9 +195,9 @@ db.connect(config.mongouri, config.mogoname, (err) => {
 					var message = "Ваши приемы: "	
 					for(var priem of docs) {
 						if(priem.idDoct == msg.chat.id) {
-							cardModel.getCardByID(priem.idUser, (err, docs) => {
+							cardModel.getCardByID(priem.idUser, (err, card) => {
 								console.log(priem);
-								message += priem.time + " числа с " + docs.name + ", ";
+								message += priem.time + " числа с " + card.name + ", ";
 							});
 							
 						}
