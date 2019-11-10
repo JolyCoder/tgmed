@@ -10,5 +10,4 @@ exports.getCardByID = (id, cb) => {
 			}
 		}
 	});
-	return cb("not find", []);
 };
