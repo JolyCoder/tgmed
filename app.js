@@ -193,13 +193,7 @@ db.connect(config.mongouri, config.mogoname, (err) => {
 					var message = "Ваши приемы: "	
 					for(var priem of docs) {
 						if(priem.idDoct == msg.chat.id) {
-							cardModel.getCard((err, cards) => {
-								for(var card of cards) {
-									if(card.id == priem.idUser)
-										message += priem.time + " числа с " + card.name + ", ";
-								}
-							});
-							
+							message += priem.time + " числа, ";							
 						}
 					}
 					bot.sendMessage(msg.chat.id, message);
