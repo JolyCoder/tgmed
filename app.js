@@ -22,6 +22,8 @@ const bot = new TelegramBot("963374939:AAECJC50Qi4iaROG8j48JKBQ48L5Udt9-m8", {
 	polling: true
 });
 
+
+x
 var current_connects = {};
 
 var current_queue = [];
@@ -177,7 +179,7 @@ db.connect(config.mongouri, config.mogoname, (err) => {
 					});
 			}
 			else {
-				if(current_connects[msg.chat.id])
+				if(current_connects[msg.chat.id] != undefined && current_connects[msg.chat.id] != "")
 					bot.sendMessage(current_connects[msg.chat.id], msg.text);
 				else
 					bot.sendMessage(msg.chat.id, "Неверная команда!");
