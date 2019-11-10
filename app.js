@@ -178,6 +178,8 @@ db.connect(config.mongouri, config.mogoname, (err) => {
 			}
 			else if(msg.text == "/getCard") {
 					cardModel.getCardByID(current_connects[msg.chat.id], (err, card) => {
+						if(err)
+							return;
 						console.log(card);
 						var message = card.name + "\n" +
 									  card.bolz + "\n" +
@@ -188,10 +190,13 @@ db.connect(config.mongouri, config.mogoname, (err) => {
 			}
 			else if(msg.text == "/priems") {
 				priemModel.getPriem((err, docs) => {
+					if(err)
+						return;
 					var message = "Ваши приемы: "	
 					for(var priem of docs) {
 						if(priem.idDoct == msg.chat.id) {
 							cardModel.getCardByID(priem.idUser, (err, docs) => {
+								console.log(priem);
 								message += priem.time + " числа с " + docs.name + ", ";
 							});
 							
