@@ -178,6 +178,7 @@ db.connect(config.mongouri, config.mogoname, (err) => {
 			}
 			else if(msg.text == "/getCard") {
 					cardModel.getCardByID(current_connects[msg.chat.id], (err, card) => {
+						console.log(card);
 						var message = card.name + "\n" +
 									  card.bolz + "\n" +
 									  card.gk + "\n" +
