@@ -23,7 +23,7 @@ const bot = new TelegramBot("963374939:AAECJC50Qi4iaROG8j48JKBQ48L5Udt9-m8", {
 });
 
 
-x
+
 var current_connects = {};
 
 var current_queue = [];
