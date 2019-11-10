@@ -156,7 +156,7 @@ db.connect(config.mongouri, config.mogoname, (err) => {
 				bot.sendMessage(current_connects[msg.chat.id], "Вы отключены!");
 				bot.sendMessage(msg.chat.id, "Вы отключены!");
 			}
-			else if(msg.text == "/addMed") {
+			else if(splitMsg[0] == "/addMed") {
 				var buttons = {
 					reply_markup: JSON.stringify({
 						inline_keyboard: [
