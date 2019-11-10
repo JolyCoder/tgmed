@@ -119,6 +119,7 @@ db.connect(config.mongouri, config.mogoname, (err) => {
 				}
 				else {
 					current_queue[msg.data].push(msg.message.chat.id);
+					bot.sendMessage(msg.message.chat.id, "Вы записаны в очередь!");
 				}
 			}
 		});
