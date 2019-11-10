@@ -7,7 +7,7 @@ exports.getPriem = (cb) => {
 }
 
 exports.addPriem = (priem, cb) => {
-	db.get().insertOne(priem, (err, docs) => {
+	db.get().collection("priems").insertOne(priem, (err, docs) => {
 		cb(err, docs);
 	});
 }
