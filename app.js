@@ -59,7 +59,7 @@ db.connect(config.mongouri, config.mogoname, (err) => {
 				if(err) 
 					return console.log(err);
 				for(var priem of docs) {
-					if(parseInt(priem.date) == (new Date).getDate()) {
+					if(parseInt(priem.time) == (new Date).getDate()) {
 						bot.sendMessage(priem.idUser, "Сегодня у вас прием у врача!");
 					}
 				}
